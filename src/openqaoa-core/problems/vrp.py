@@ -139,7 +139,7 @@ class VRPMatrix(Problem):
         np.fill_diagonal(distance_matrix, 0) 
         distance_matrix = distance_matrix.tolist()
         
-        return VRPMatrix( distance_matrix = distance_matrix, n_vehicles , depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
+        return VRPMatrix( distance_matrix = distance_matrix, n_vehicles       = n_vehicles , depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
 
 
     @property
