@@ -8,9 +8,9 @@ from .minimumvertexcover import MinimumVertexCover
 from .numberpartition import NumberPartition
 from .shortestpath import ShortestPath
 from .tsp import TSP
-from .vehiclerouting import VRP
+#from .vehiclerouting import VRP
 from .maximalindependentset import MIS 
-from .vrp import VRPMatrix 
+from .vrp import VRP 
 from .binpacking import BinPacking
 from .qubo import QUBO
 
