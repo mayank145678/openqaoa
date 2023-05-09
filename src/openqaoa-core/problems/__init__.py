@@ -6,8 +6,7 @@ from .shortestpath import ShortestPath
 from .tsp import TSP
 from .portfoliooptimization import PortfolioOptimization
 from .maximalindependentset import MIS
-from .binpacking import BinPacking
-from .vehiclerouting import VRP
+from .binpacking import BinPacking 
 from .converters import FromDocplex2IsingModel 
-from .vrp import VRPMatrix 
+from .vrp import VRP          
 from .qubo import QUBO
