@@ -11,7 +11,7 @@ from .converters import FromDocplex2IsingModel
 from .qubo import QUBO
 
 
-class VRPMatrix(Problem):
+class VRP(Problem):
     
     """
     Creates an instance of the Vehicle Routing Problem (VRP) using a distance matrix, graph, or coordinates.
@@ -121,7 +121,7 @@ class VRPMatrix(Problem):
         np.fill_diagonal(distance_matrix, 0) 
         distance_matrix = distance_matrix.tolist()
         
-        return VRPMatrix( distance_matrix = distance_matrix, n_vehicles       = n_vehicles , depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
+        return VRP( distance_matrix = distance_matrix, n_vehicles       = n_vehicles , depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
 
 
     @property
