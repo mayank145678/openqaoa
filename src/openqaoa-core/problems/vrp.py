@@ -50,13 +50,25 @@ class VRPMatrix(Problem):
     def __init__(
         self,
         distance_matrix: list = None,
+        G: nx.Graph = None,
+        pos: list = None, 
         n_vehicles: int = 1,
         depot: int = 0,
         subtours: list = -1,
         method: str = "slack",
         penalty: Union[int, float, list] = 4,
     ):  
-        self.distance_matrix = distance_matrix
+        if distance_matrix is None and G is not None:
+            self.distance_matrix = self._graph_to_distance_matrix(G, pos)
+
+        elif distance_matrix is None and pos is not None : 
+            self.distance_matrix = self._pos_to_distance_matrix(pos) 
+
+        elif distance_matrix is None :
+            raise ValueError(" Distance_matrix, graph or pos must be provided.")      
+        
+        else :
+            self.distance_matrix = distance_matrix
         
         self.n_vehicles = n_vehicles
         self.depot = depot 
@@ -72,8 +84,63 @@ class VRPMatrix(Problem):
         else:
             self.penalty = penalty 
 
- 
+    @staticmethod
+    def _graph_to_distance_matrix(G, pos):
+        n_nodes = G.number_of_nodes()
+        distance_matrix = np.zeros((n_nodes, n_nodes))
 
+        for i in range(n_nodes - 1):
+            for j in range(i + 1, n_nodes):
+                r = np.sqrt((pos[i][0] - pos[j][0]) ** 2 + (pos[i][1] - pos[j][1]) ** 2)
+                distance_matrix[i, j] = r
+                distance_matrix[j, i] = r
+
+        return distance_matrix.tolist() 
+    
+    ''' @property
+    def G(self):
+        return self._G '''
+    
+
+    @staticmethod 
+    def _pos_to_distance_matrix(pos): 
+        n_nodes = len(pos) 
+        distance_matrix = np.zeros((n_nodes ,     n_nodes))
+        for i in range( n_nodes - 1): 
+            for j in range( i + 1 , n_nodes) : 
+                r = np.sqrt((pos[i][0]     - pos[j][0]) ** 2 + (pos[i][1] - pos[j][1]     ) **      2) 
+                distance_matrix[i, j] = r 
+                distance_matrix[ j, i] = r 
+        return distance_matrix.tolist() 
+        '''@G.setter
+    def G(self, input_networkx_graph):
+        if not isinstance(input_networkx_graph, nx.Graph):
+            raise TypeError("Input problem graph must be a networkx Graph.")
+
+        # Relabel nodes to integers starting from 0
+        mapping = dict(
+            zip(input_networkx_graph, range(input_networkx_graph.number_of_nodes()))
+        )
+        self._G = nx.relabel_nodes(input_networkx_graph, mapping) '''
+
+
+
+    @property
+    def distance_matrix(self):
+        return self._distance_matrix 
+    
+    @distance_matrix.setter
+    def distance_matrix(self, input_distance_matrix): 
+        if  isinstance(input_distance_matrix, np.ndarray):
+            raise TypeError("Input distance matrix should not be a numpy ndarray.") 
+        le =len( input_distance_matrix) 
+        if len(input_distance_matrix) != len(input_distance_matrix[0])        : 
+            raise TypeError("Distance matrix is not a square matrix") 
+        for i in range(le  - 1 ): 
+            for j in range( i+ 1, le) :    
+                if input_distance_matrix[i][j] != input_distance_matrix[j][i]:
+                    raise TypeError(" Input distance matrix is not symmetric    ")
+        self._distance_matrix = input_distance_matrix 
     @staticmethod
     def random_instance(  **kwargs):
         """
@@ -121,7 +188,7 @@ class VRPMatrix(Problem):
         np.fill_diagonal(distance_matrix, 0) 
         distance_matrix = distance_matrix.tolist()
         
-        return VRPMatrix( distance_matrix = distance_matrix, n_vehicles       = n_vehicles , depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
+        return VRPMatrix( distance_matrix = distance_matrix, G= None , pos = None,n_vehicles = n_vehicles, depot = depot,   subtours= subtours, method =method, penalty =penalty ) 
 
 
     @property
@@ -221,7 +288,7 @@ class VRPMatrix(Problem):
         cplex_model = self.docplex_model
         if self.method == "slack":
             qubo_docplex = FromDocplex2IsingModel(
-                cplex_model          ,multipliers=self.penalty        ).ising_model
+                cplex_model          ,multipliers=self.penalty             ).ising_model
         elif self.method == "unbalanced":
             qubo_docplex = FromDocplex2IsingModel(
                 cplex_model,
