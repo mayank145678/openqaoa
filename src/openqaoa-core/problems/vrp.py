@@ -45,7 +45,7 @@ class VRP(Problem):
     -------
         An instance of the VRP problem.
     """
-    __name__ = "vehicle_routing_from_matrix"
+    __name__ = "vehicle_routing"
     
     def __init__(
         self,
