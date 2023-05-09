@@ -214,7 +214,7 @@ class VRPMatrix(Problem):
         # Minimize distance traveled
         mdl.minimize(
             mdl.sum(
-                self.distance_matrix[i][j] * x[(i, j)]
+                self.distance_matrix[i][j] * x[(i, j)]/100
                 for i in range(num_nodes - 1)
                 for j in range(i + 1, num_nodes)
             )
