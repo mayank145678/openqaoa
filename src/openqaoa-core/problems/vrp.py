@@ -74,24 +74,6 @@ class VRPMatrix(Problem):
 
  
 
-
-
-    @property
-    def distance_matrix(self):
-        return self._distance_matrix 
-    
-    @distance_matrix.setter
-    def distance_matrix(self, input_distance_matrix): 
-        if  isinstance(input_distance_matrix, np.ndarray):
-            raise TypeError("Input distance matrix should not be a numpy ndarray.") 
-        le =len( input_distance_matrix) 
-        if len(input_distance_matrix) != len(input_distance_matrix[0])        : 
-            raise TypeError("Distance matrix is not a square matrix") 
-        for i in range(le  - 1 ): 
-            for j in range( i+ 1, le) :    
-                if input_distance_matrix[i][j] != input_distance_matrix[j][i]:
-                    raise TypeError(" Input distance matrix is not symmetric    ")
-        self._distance_matrix = input_distance_matrix 
     @staticmethod
     def random_instance(  **kwargs):
         """
